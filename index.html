@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino del Pana $PANA</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #1a1a1a; color: #fff; text-align: center; padding: 50px; }
+        .card { background: #2a2a2a; border-radius: 15px; padding: 30px; display: inline-block; box-shadow: 0px 4px 15px rgba(0,0,0,0.5); }
+        h1 { color: #f3ba2f; }
+        button { background-color: #f3ba2f; border: none; color: black; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px; font-weight: bold; }
+        button:hover { background-color: #e5aa20; }
+        .resultado { margin-top: 20px; font-size: 20px; font-weight: bold; }
+    </style>
+    <!-- Cargamos la librería para conectar billeteras cripto -->
+    <script src="https://jsdelivr.net"></script>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🎲 El Juego del Pana $PANA 🎲</h1>
+        <p>Conecta tu billetera Web3 y prueba tu suerte con tus compinches.</p>
+        
+        <button id="btnConectar" onclick="conectarBilletera()">🔌 Conectar Billetera</button>
+        
+        <div id="zonaJuego" style="display:none; margin-top: 30px;">
+            <h3>Elige tu opción (Costo: 10,000 $PANA)</h3>
+            <button onclick="jugar(0)">🪙 Cara</button>
+            <button onclick="jugar(1)">❌ Cruz</button>
+        </div>
+
+        <div class="resultado" id="txtResultado"></div>
+    </div>
+
+    <script>
+        let walletConectada = false;
+
+        async function conectarBilletera() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    document.getElementById('btnConectar').innerText = "✅ Conectado: " + accounts[0].substring(0,6) + "...";
+                    document.getElementById('zonaJuego').style.display = "block";
+                    walletConectada = true;
+                } catch (error) {
+                    alert("Error al conectar la billetera");
+                }
+            } else {
+                alert("Por favor, abre esto desde MetaMask o Binance Web3 Wallet");
+            }
+        }
+
+        function jugar(eleccion) {
+            document.getElementById('txtResultado').innerText = "🎰 Girando la moneda del Pana...";
+            
+            setTimeout(() => {
+                // Genera un resultado aleatorio (0 o 1)
+                const resultadoAleatorio = Math.floor(Math.random() * 2);
+                const opciones = ["Cara", "Cruz"];
+                
+                if (eleccion === resultadoAleatorio) {
+                    document.getElementById('txtResultado').style.color = "#4caf50";
+                    document.getElementById('txtResultado').innerText = "🎉 ¡Ganaste, mi pana! Salió " + opciones[resultadoAleatorio] + ". Tus tokens se han multiplicado.";
+                } else {
+                    document.getElementById('txtResultado').style.color = "#f44336";
+                    document.getElementById('txtResultado').innerText = "💥 Perdiste, mi pana. Salió " + opciones[resultadoAleatorio] + ". ¡Suerte para la próxima!";
+                }
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
